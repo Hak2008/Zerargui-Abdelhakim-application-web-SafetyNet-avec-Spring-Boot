@@ -2,13 +2,16 @@ package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/person")
 public class PersonController {
@@ -17,13 +20,14 @@ public class PersonController {
 
     @Autowired
     public PersonController(PersonService personService) {
+
         this.personService = personService;
     }
 
     @PostMapping
     public ResponseEntity<Person> addPerson(@RequestBody Person person) {
         Person addedPerson = personService.addPerson(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedPerson);
+        return new ResponseEntity<>(addedPerson, HttpStatus.CREATED);
     }
 
     @PutMapping("/{firstName}/{lastName}")
@@ -53,8 +57,20 @@ public class PersonController {
 
     @GetMapping
     public ResponseEntity<List<Person>> getAllPersons() {
-        List<Person> persons = personService.getAllPersons();
+
+  List<Person> persons = personService.getAllPersons();
         return ResponseEntity.ok(persons);
     }
-}
 
+    @GetMapping("/{firstName}/{lastName}")
+    public ResponseEntity<Person> getPersonByFirstNameAndLastName(
+            @PathVariable String firstName,
+            @PathVariable String lastName) {
+        Optional<Person> optionalPerson = personService.findByFirstNameAndLastName(firstName, lastName);
+        if (optionalPerson.isPresent()) {
+            return ResponseEntity.ok(optionalPerson.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}

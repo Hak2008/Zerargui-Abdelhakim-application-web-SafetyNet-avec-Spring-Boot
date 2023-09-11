@@ -2,6 +2,7 @@ package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.service.MedicalRecordService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/medicalRecord")
 public class MedicalRecordController {
@@ -23,7 +25,7 @@ public class MedicalRecordController {
     @PostMapping
     public ResponseEntity<MedicalRecord> addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         MedicalRecord addedMedicalRecord = medicalRecordService.addMedicalRecord(medicalRecord);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedMedicalRecord);
+        return new ResponseEntity<>(addedMedicalRecord, HttpStatus.CREATED);
     }
 
     @PutMapping("/{firstName}/{lastName}")
@@ -31,7 +33,7 @@ public class MedicalRecordController {
             @PathVariable String firstName,
             @PathVariable String lastName,
             @RequestBody MedicalRecord updatedMedicalRecord) {
-        MedicalRecord medicalRecord = medicalRecordService.updateMedicalrecord(firstName, lastName, updatedMedicalRecord);
+        MedicalRecord medicalRecord = medicalRecordService.updateMedicalRecord(firstName, lastName, updatedMedicalRecord);
         if (medicalRecord != null) {
             return ResponseEntity.ok(medicalRecord);
         } else {

@@ -1,43 +1,54 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.Person;
+import com.safetynet.alerts.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PersonService {
 
-    private final List<Person> persons = new ArrayList<>();
+    private final PersonRepository personRepository;
 
     public Person addPerson(Person person) {
-        persons.add(person);
-        return person;
+
+        return personRepository.save(person);
+    }
+    public Optional<Person> findByFirstNameAndLastName(String firstName, String lastName) {
+        return personRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     public Person updatePerson(String firstName, String lastName, Person updatedPerson) {
-        return persons.stream()
-                .filter(person -> person.getFirstName().equals(firstName) && person.getLastName().equals(lastName))
-                .findFirst()
-                .map(existingPerson -> {
-                    existingPerson.setAddress(updatedPerson.getAddress());
-                    existingPerson.setCity(updatedPerson.getCity());
-                    existingPerson.setZip(updatedPerson.getZip());
-                    existingPerson.setPhone(updatedPerson.getPhone());
-                    existingPerson.setEmail(updatedPerson.getEmail());
-                    return existingPerson;
-                })
-                .orElse(null);
+        Optional<Person> optionalPerson = personRepository.findByFirstNameAndLastName(firstName, lastName);
+
+        if (optionalPerson.isPresent()) {
+            Person existingPerson = optionalPerson.get();
+            existingPerson.setAddress(updatedPerson.getAddress());
+            existingPerson.setCity(updatedPerson.getCity());
+            existingPerson.setZip(updatedPerson.getZip());
+            existingPerson.setPhone(updatedPerson.getPhone());
+            existingPerson.setEmail(updatedPerson.getEmail());
+            return personRepository.save(existingPerson);
+        } else {
+            return null;
+        }
     }
 
     public boolean deletePerson(String firstName, String lastName) {
-        return persons.removeIf(person -> person.getFirstName().equals(firstName) && person.getLastName().equals(lastName));
+        Optional<Person> optionalPerson = personRepository.findByFirstNameAndLastName(firstName, lastName);
+
+        if (optionalPerson.isPresent()) {
+            personRepository.delete(optionalPerson.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<Person> getAllPersons() {
-        return persons;
+        return personRepository.findAll();
     }
 }
-

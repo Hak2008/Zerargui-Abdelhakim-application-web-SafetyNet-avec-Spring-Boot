@@ -1,4 +1,4 @@
 package com.safetynet.alerts;
 
-public class MedicalRecordTest {
+public class MedicalRecordControllerTest {
 }

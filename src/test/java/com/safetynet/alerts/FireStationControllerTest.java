@@ -1,4 +1,4 @@
 package com.safetynet.alerts;
 
-public class FireStationTest {
+public class FireStationControllerTest {
 }
