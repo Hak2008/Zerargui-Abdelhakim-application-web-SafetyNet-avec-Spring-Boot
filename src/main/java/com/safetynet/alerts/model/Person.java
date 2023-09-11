@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.Period;
+
 
 @Entity
 @Table(name = "persons")
@@ -22,8 +21,8 @@ public class Person {
     private String zip;
     private String phone;
     private String email;
-
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "medical_record_id")
     private MedicalRecord medicalRecord;
 

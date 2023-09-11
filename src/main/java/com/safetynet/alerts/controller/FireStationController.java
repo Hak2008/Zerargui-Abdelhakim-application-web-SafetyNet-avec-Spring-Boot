@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,8 @@ public class FireStationController {
             return ResponseEntity.notFound().build();
         }
 
+        LocalDate currentDate = LocalDate.now();
+
         List<Map<String, String>> filteredPersons = coveredPersons.stream()
                 .map(person -> {
                     Map<String, String> personInfo = new HashMap<>();
@@ -85,13 +88,7 @@ public class FireStationController {
                 .collect(Collectors.toList());
 
         long adultsCount = coveredPersons.stream()
-                .filter(person -> {
-                    if (person.getMedicalRecord() != null) {
-                        return person.getMedicalRecord().isAdult();
-                    } else {
-                        return false; // Assuming adults count is 0 if medical record is missing
-                    }
-                })
+                .filter(person -> person.getMedicalRecord() != null && person.getMedicalRecord().isAdult(currentDate))
                 .count();
 
         long childrenCount = coveredPersons.size() - adultsCount;

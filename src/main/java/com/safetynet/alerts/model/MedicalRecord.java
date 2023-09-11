@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -18,20 +19,14 @@ public class MedicalRecord {
     private long id;
     private String firstName;
     private String lastName;
-
     @JsonFormat(pattern = "MM/dd/yyyy")
     private String birthdate;
-
     private List<String> medications;
     private List<String> allergies;
 
-    @OneToOne(mappedBy = "medicalRecord", cascade = CascadeType.ALL)
-    private Person person;
-
-    public boolean isAdult() {
+    public boolean isAdult(LocalDate currentDate) {
         if (birthdate != null) {
-            LocalDate birthdate = LocalDate.parse(this.birthdate);
-            LocalDate currentDate = LocalDate.now();
+            LocalDate birthdate = LocalDate.parse(this.birthdate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
             int age = Period.between(birthdate, currentDate).getYears();
             return age > 18;
         } else {

@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -53,17 +55,30 @@ public class JsonDataLoader implements CommandLineRunner {
             List<Any> fireStationsData = data.get("firestations").asList();
             List<Any> medicalRecordsData = data.get("medicalrecords").asList();
 
+            Map<String, MedicalRecord> personToMedicalRecordMap = new HashMap<>();
+
+            for (Any medicalRecordData : medicalRecordsData) {
+                MedicalRecord medicalRecord = medicalRecordData.as(MedicalRecord.class);
+                String medicalRecordKey = medicalRecord.getFirstName() + medicalRecord.getLastName();
+                personToMedicalRecordMap.put(medicalRecordKey, medicalRecord);
+            }
+
             for (Any personData : personsData) {
                 Person person = personData.as(Person.class);
+
+                String medicalRecordKey = person.getFirstName() + person.getLastName();
+                MedicalRecord medicalRecord = personToMedicalRecordMap.get(medicalRecordKey);
+
+                if (medicalRecord != null) {
+                    person.setMedicalRecord(medicalRecord);
+                }
+
                 personService.addPerson(person);
             }
+
             for (Any fireStationData : fireStationsData) {
                 FireStation fireStation = fireStationData.as(FireStation.class);
                 fireStationService.addFireStation(fireStation);
-            }
-            for (Any medicalRecordData : medicalRecordsData) {
-                MedicalRecord medicalRecord = medicalRecordData.as(MedicalRecord.class);
-                medicalRecordService.addMedicalRecord(medicalRecord);
             }
         } catch (IOException e) {
             e.printStackTrace();
