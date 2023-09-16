@@ -1,7 +1,6 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.model.FireStation;
-import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.FireStationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 
 @Slf4j
 @RestController
@@ -26,6 +20,7 @@ public class FireStationController {
     @Autowired
     public FireStationController(FireStationService fireStationService) {
         this.fireStationService = fireStationService;
+
     }
 
     @PostMapping
@@ -40,66 +35,36 @@ public class FireStationController {
     public ResponseEntity<FireStation> updateFireStation(
             @PathVariable String address,
             @RequestBody FireStation updateFireStation) {
+        log.info("PUT request received: Updating a fire station for address {}", address);
         FireStation fireStation = fireStationService.updateFireStation(address, updateFireStation);
         if (fireStation != null) {
+            log.info("Fire station updated successfully.");
             return ResponseEntity.ok(fireStation);
         } else {
+            log.info("No fire station found for address {}", address);
             return ResponseEntity.notFound().build();
         }
     }
 
-
     @DeleteMapping("/{address}")
     public ResponseEntity<Void> deleteFireStation(
             @PathVariable String address){
+        log.info("DELETE request received: Deleting a fire station for address {}", address);
         boolean deleted = fireStationService.deleteFireStation(address);
         if (deleted) {
+            log.info("Fire station deleted successfully.");
             return ResponseEntity.noContent().build();
         } else{
+            log.info("No fire station found for address {}", address);
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping
     public ResponseEntity<List<FireStation>> getAllFireStations() {
+        log.info("GET request received: Getting all fire stations.");
         List<FireStation> fireStations = fireStationService.getAllFireStations();
+        log.info("Reply sent with status: " + HttpStatus.OK);
         return ResponseEntity.ok(fireStations);
     }
-
-    @GetMapping("/coverage")
-    public ResponseEntity<Map<String, Object>> getFireStationCoverage(@RequestParam("stationNumber") int stationNumber) {
-        List<Person> coveredPersons = fireStationService.getPersonsByStationNumber(stationNumber);
-
-        if (coveredPersons.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        LocalDate currentDate = LocalDate.now();
-
-        List<Map<String, String>> filteredPersons = coveredPersons.stream()
-                .map(person -> {
-                    Map<String, String> personInfo = new HashMap<>();
-                    personInfo.put("firstName", person.getFirstName());
-                    personInfo.put("lastName", person.getLastName());
-                    personInfo.put("address", person.getAddress());
-                    personInfo.put("phone", person.getPhone());
-                    return personInfo;
-                })
-                .collect(Collectors.toList());
-
-        long adultsCount = coveredPersons.stream()
-                .filter(person -> person.getMedicalRecord() != null && person.getMedicalRecord().isAdult(currentDate))
-                .count();
-
-        long childrenCount = coveredPersons.size() - adultsCount;
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("coveredPersons", filteredPersons);
-        response.put("numberOfAdults", adultsCount);
-        response.put("numberOfChildren", childrenCount);
-
-        return ResponseEntity.ok(response);
-    }
-
-
 }

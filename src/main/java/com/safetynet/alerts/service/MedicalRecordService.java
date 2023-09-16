@@ -1,48 +1,40 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.MedicalRecord;
-import com.safetynet.alerts.repository.MedicalRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MedicalRecordService {
 
-    private final MedicalRecordRepository medicalRecordRepository;
+    private final List<MedicalRecord> medicalRecords = new ArrayList<>();
 
-    public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord) {
-        return medicalRecordRepository.save(medicalRecord);
+    public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord){
+        medicalRecords.add(medicalRecord);
+        return medicalRecord;
     }
 
-    public MedicalRecord updateMedicalRecord(String firstName, String lastName, MedicalRecord updatedMedicalRecord) {
-        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
-
-        if (optionalMedicalRecord.isPresent()) {
-            MedicalRecord existingMedicalRecord = optionalMedicalRecord.get();
-            existingMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
-            existingMedicalRecord.setMedications(updatedMedicalRecord.getMedications());
-            existingMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
-            return medicalRecordRepository.save(existingMedicalRecord);
-        } else {
-            return null;
-        }
+    public MedicalRecord updateMedicalRecord (String firstName, String lastName, MedicalRecord updatedMedicalRecord) {
+        return medicalRecords.stream()
+                .filter(medicalRecord -> medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName))
+                .findFirst()
+                .map(existingMedicalRecord -> {
+                    existingMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
+                    existingMedicalRecord.setMedications(updatedMedicalRecord.getMedications());
+                    existingMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
+                    return existingMedicalRecord;
+                })
+                .orElse(null);
     }
 
-    public boolean deleteMedicalRecord(String firstName, String lastName) {
-        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
-
-        if (optionalMedicalRecord.isPresent()) {
-            medicalRecordRepository.delete(optionalMedicalRecord.get());
-            return true;
-        } else {
-            return false;
-        }
+    public boolean deleteMedicalRecord( String firstName, String lastName) {
+        return medicalRecords.removeIf(medicalRecord -> medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName));
     }
 
     public List<MedicalRecord> getAllMedicalRecords() {
-        return medicalRecordRepository.findAll();
+        return medicalRecords;
     }
 }

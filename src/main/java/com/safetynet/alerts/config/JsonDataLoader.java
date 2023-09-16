@@ -8,7 +8,6 @@ import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.FireStationService;
 import com.safetynet.alerts.service.MedicalRecordService;
 import com.safetynet.alerts.service.PersonService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -21,14 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
+
 @Component
 public class JsonDataLoader implements CommandLineRunner {
 
     private final PersonService personService;
     private final FireStationService fireStationService;
     private final MedicalRecordService medicalRecordService;
-
     @Autowired
     public JsonDataLoader(
             PersonService personService,
@@ -61,18 +59,16 @@ public class JsonDataLoader implements CommandLineRunner {
                 MedicalRecord medicalRecord = medicalRecordData.as(MedicalRecord.class);
                 String medicalRecordKey = medicalRecord.getFirstName() + medicalRecord.getLastName();
                 personToMedicalRecordMap.put(medicalRecordKey, medicalRecord);
+                medicalRecordService.addMedicalRecord(medicalRecord);
             }
 
             for (Any personData : personsData) {
                 Person person = personData.as(Person.class);
-
                 String medicalRecordKey = person.getFirstName() + person.getLastName();
                 MedicalRecord medicalRecord = personToMedicalRecordMap.get(medicalRecordKey);
-
                 if (medicalRecord != null) {
                     person.setMedicalRecord(medicalRecord);
                 }
-
                 personService.addPerson(person);
             }
 
@@ -80,6 +76,7 @@ public class JsonDataLoader implements CommandLineRunner {
                 FireStation fireStation = fireStationData.as(FireStation.class);
                 fireStationService.addFireStation(fireStation);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

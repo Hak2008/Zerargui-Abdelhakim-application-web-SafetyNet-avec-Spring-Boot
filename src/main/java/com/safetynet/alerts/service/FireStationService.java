@@ -1,63 +1,39 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.FireStation;
-import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.repository.FireStationRepository;
-import com.safetynet.alerts.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class FireStationService {
 
-    private final FireStationRepository fireStationRepository;
-    private final PersonRepository personRepository;
+    private final List<FireStation> fireStations = new ArrayList<>();
+
 
     public FireStation addFireStation(FireStation fireStation) {
-
-        return fireStationRepository.save(fireStation);
+        fireStations.add(fireStation);
+        return (fireStation);
     }
 
-    public FireStation updateFireStation(String address, FireStation updatedFireStation) {
-        Optional<FireStation> optionalFireStation = fireStationRepository.findByAddress(address);
-
-        if (optionalFireStation.isPresent()) {
-            FireStation existingFireStation = optionalFireStation.get();
-            existingFireStation.setStation(updatedFireStation.getStation());
-            return fireStationRepository.save(existingFireStation);
-        } else {
-            return null;
-        }
+    public FireStation updateFireStation (String address, FireStation updatedFireStation) {
+        return fireStations.stream()
+                .filter(fireStation -> fireStation.getAddress().equals(address))
+                .findFirst()
+                .map(existingFireStation -> {
+                    existingFireStation.setStation(updatedFireStation.getStation());
+                    return existingFireStation;
+                })
+                .orElse(null);
     }
 
-    public boolean deleteFireStation(String address) {
-        Optional<FireStation> optionalFireStation = fireStationRepository.findByAddress(address);
-
-        if (optionalFireStation.isPresent()) {
-            fireStationRepository.delete(optionalFireStation.get());
-            return true;
-        } else {
-            return false;
-        }
+    public boolean deleteFireStation ( String address){
+        return fireStations.removeIf(fireStation -> fireStation.getAddress().equals(address));
     }
 
     public List<FireStation> getAllFireStations() {
 
-        return fireStationRepository.findAll();
-    }
-
-    public List<Person> getPersonsByStationNumber(int stationNumber) {
-        List<FireStation> fireStations = fireStationRepository.findByStation(Integer.toString(stationNumber));
-
-        List<String> coveredAddresses = fireStations.stream()
-                .map(FireStation::getAddress)
-                .collect(Collectors.toList());
-
-        return personRepository.findByAddressIn(coveredAddresses);
+        return fireStations;
     }
 }

@@ -17,16 +17,16 @@ import java.util.Optional;
 public class PersonController {
 
     private final PersonService personService;
-
     @Autowired
     public PersonController(PersonService personService) {
-
         this.personService = personService;
     }
 
     @PostMapping
     public ResponseEntity<Person> addPerson(@RequestBody Person person) {
+        log.info("POST request received: Adding a person.");
         Person addedPerson = personService.addPerson(person);
+        log.info("Person added successfully.");
         return new ResponseEntity<>(addedPerson, HttpStatus.CREATED);
     }
 
@@ -35,10 +35,13 @@ public class PersonController {
             @PathVariable String firstName,
             @PathVariable String lastName,
             @RequestBody Person updatedPerson) {
+        log.info("PUT request received: Updating a person for {} {}.", firstName, lastName);
         Person person = personService.updatePerson(firstName, lastName, updatedPerson);
         if (person != null) {
+            log.info("Person updated successfully.");
             return ResponseEntity.ok(person);
         } else {
+            log.info("No person found for {} {}.", firstName, lastName);
             return ResponseEntity.notFound().build();
         }
     }
@@ -47,30 +50,22 @@ public class PersonController {
     public ResponseEntity<Void> deletePerson(
             @PathVariable String firstName,
             @PathVariable String lastName) {
+        log.info("DELETE request received: Deleting a person for {} {}.", firstName, lastName);
         boolean deleted = personService.deletePerson(firstName, lastName);
         if (deleted) {
+            log.info("Person deleted successfully.");
             return ResponseEntity.noContent().build();
         } else {
+            log.info("No person found for {} {}.", firstName, lastName);
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping
     public ResponseEntity<List<Person>> getAllPersons() {
-
-  List<Person> persons = personService.getAllPersons();
+        log.info("GET request received: Getting all persons.");
+        List<Person> persons = personService.getAllPersons();
+        log.info("Reply sent with status: " + HttpStatus.OK);
         return ResponseEntity.ok(persons);
-    }
-
-    @GetMapping("/{firstName}/{lastName}")
-    public ResponseEntity<Person> getPersonByFirstNameAndLastName(
-            @PathVariable String firstName,
-            @PathVariable String lastName) {
-        Optional<Person> optionalPerson = personService.findByFirstNameAndLastName(firstName, lastName);
-        if (optionalPerson.isPresent()) {
-            return ResponseEntity.ok(optionalPerson.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 }
