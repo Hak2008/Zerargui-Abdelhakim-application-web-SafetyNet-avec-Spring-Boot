@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class CommunityEmailController {
 
         if (emails.isEmpty()) {
             log.info("No emails found for city {}", city);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(Collections.emptyList());
         }
         log.info("Reply sent with status: " + HttpStatus.OK);
         return ResponseEntity.ok(emails);

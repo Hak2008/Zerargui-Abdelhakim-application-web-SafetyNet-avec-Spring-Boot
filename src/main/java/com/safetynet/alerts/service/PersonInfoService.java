@@ -1,6 +1,5 @@
 package com.safetynet.alerts.service;
 
-
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,6 @@ public class PersonInfoService {
                 personInfo.put("medications", medicalRecord.getMedications());
                 personInfo.put("allergies", medicalRecord.getAllergies());
             }
-
             resultByLastName.computeIfAbsent(lastName, k -> new ArrayList<>()).add(personInfo);
         }
 

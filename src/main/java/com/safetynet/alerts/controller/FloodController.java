@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class FloodController {
 
         if (homesServedByStations.isEmpty()) {
             log.info("No homes found for stations {}", stationNumbers);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(Collections.emptyList());
         }
         log.info("Reply sent with status: " + HttpStatus.OK);
         return ResponseEntity.ok(homesServedByStations);

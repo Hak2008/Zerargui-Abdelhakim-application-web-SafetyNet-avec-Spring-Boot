@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class PersonInfoController {
 
         if (personInfo.isEmpty()) {
             log.info("No person info found for first name {} and last name {}", firstName, lastName);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
         log.info("Reply sent with status: {}", HttpStatus.OK);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -32,7 +33,7 @@ public class PhoneAlertController {
 
         if (phoneNumbers.isEmpty()) {
             log.info("No residents found for firestation number {}", fireStationNumber);
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(Collections.emptyList());
         }
         log.info("Reply sent with status: " + HttpStatus.OK);
         return ResponseEntity.ok(phoneNumbers);

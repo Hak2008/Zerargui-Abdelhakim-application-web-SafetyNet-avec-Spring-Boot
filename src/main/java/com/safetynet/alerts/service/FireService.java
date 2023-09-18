@@ -19,6 +19,7 @@ public class FireService {
     private final PersonService personService;
 
     public List<Map<String, Object>> getResidentsAndFireStationByAddress(String address) {
+
         List<FireStation> fireStations = fireStationService.getAllFireStations();
         List<Person> allPersons = personService.getAllPersons();
 

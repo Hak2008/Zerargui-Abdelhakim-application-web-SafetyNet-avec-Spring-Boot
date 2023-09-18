@@ -11,7 +11,6 @@ public class FireStationService {
 
     private final List<FireStation> fireStations = new ArrayList<>();
 
-
     public FireStation addFireStation(FireStation fireStation) {
         fireStations.add(fireStation);
         return (fireStation);
@@ -33,7 +32,6 @@ public class FireStationService {
     }
 
     public List<FireStation> getAllFireStations() {
-
         return fireStations;
     }
 }
