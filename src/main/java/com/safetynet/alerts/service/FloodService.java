@@ -4,6 +4,7 @@ import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,12 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FloodService {
 
     private final PersonService personService;
     private final FireStationService fireStationService;
 
     public List<Map<String, Object>> getHomesServedByStations(List<String> stationNumbers) {
+        log.info("GET request received: Get homes served by stations for station numbers {}", stationNumbers);
+        log.debug("Starting flood service processing for station numbers {}", stationNumbers);
 
         List<Person> allPersons = personService.getAllPersons();
         List<FireStation> allFireStations = fireStationService.getAllFireStations();
@@ -59,6 +63,10 @@ public class FloodService {
             addressInfo.put("residents", residents);
             result.add(addressInfo);
         });
+
+        log.debug("Flood service processing completed for station numbers {}", stationNumbers);
+        log.info("Reply sent with status: success");
+
         return result;
     }
 }

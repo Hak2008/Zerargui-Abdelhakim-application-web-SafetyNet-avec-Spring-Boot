@@ -25,31 +25,36 @@ public class ChildAlertService {
         List<Person> allPersons = personService.getAllPersons();
         List<Map<String, Object>> childAlertList = new ArrayList<>();
 
-        List<Person> children = allPersons.stream()
+        try{
+           List<Person> children = allPersons.stream()
                 .filter(person -> person.getAddress().equals(address) && person.getMedicalRecord() != null
                         && person.getMedicalRecord().getAge() <= 18)
                 .collect(Collectors.toList());
 
-        if (!children.isEmpty()) {
-            for (Person child : children) {
-                Map<String, Object> childDetails = new HashMap<>();
-                childDetails.put("firstName", child.getFirstName());
-                childDetails.put("lastName", child.getLastName());
-                childDetails.put("age", child.getMedicalRecord().getAge());
+           if (!children.isEmpty()) {
+               for (Person child : children) {
+                   Map<String, Object> childDetails = new HashMap<>();
+                   childDetails.put("firstName", child.getFirstName());
+                   childDetails.put("lastName", child.getLastName());
+                   childDetails.put("age", child.getMedicalRecord().getAge());
 
-                List<String> otherHouseholdMembers = allPersons.stream()
-                        .filter(person -> person.getAddress().equals(address) && !person.equals(child))
-                        .map(person -> person.getFirstName() + " " + person.getLastName())
-                        .collect(Collectors.toList());
+                   List<String> otherHouseholdMembers = allPersons.stream()
+                           .filter(person -> person.getAddress().equals(address) && !person.equals(child))
+                           .map(person -> person.getFirstName() + " " + person.getLastName())
+                           .collect(Collectors.toList());
 
-                childDetails.put("otherHouseholdMembers", otherHouseholdMembers);
-                childAlertList.add(childDetails);
-            }
-        }else {
-            log.info("No children found at address {}", address);
+                   childDetails.put("otherHouseholdMembers", otherHouseholdMembers);
+                   childAlertList.add(childDetails);
+               }
+           }else {
+              log.info("No children found at address {}", address);
+           }
+           log.debug("Child alert processing completed for address {}", address);
+           log.info("Reply sent with status: {}", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error processing child alert: {}", e.getMessage(), e);
+            throw e;
         }
-        log.debug("Child alert processing completed for address {}", address);
-        log.info("Reply sent with status: {}", HttpStatus.OK);
         return childAlertList;
     }
 }

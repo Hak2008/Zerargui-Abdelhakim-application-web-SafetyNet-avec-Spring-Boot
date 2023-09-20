@@ -4,6 +4,7 @@ import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FireService {
 
     private final FireStationService fireStationService;
@@ -26,6 +28,8 @@ public class FireService {
         List<Map<String, Object>> result = new ArrayList<>();
         String fireStationNumber = null;
 
+        log.info("Request received: Get residents and fire station info for address {}", address);
+
         for (FireStation fireStation : fireStations) {
             if (fireStation.getAddress().equals(address)) {
                 fireStationNumber = fireStation.getStation();
@@ -37,6 +41,10 @@ public class FireService {
             Map<String, Object> fireStationInfo = new HashMap<>();
             fireStationInfo.put("fireStation", fireStationNumber);
             result.add(fireStationInfo);
+
+            log.info("Fire station info retrieved successfully");
+        } else {
+            log.error("No fire station info found for address {}", address);
         }
 
         for (Person person : allPersons) {
@@ -53,8 +61,13 @@ public class FireService {
                     residentInfo.put("allergies", medicalRecord.getAllergies());
                 }
                 result.add(residentInfo);
+
+                log.debug("Resident info retrieved for {} {}", person.getFirstName(), person.getLastName());
             }
         }
+
+        log.info("Reply sent with residents and fire station info");
+
         return result;
     }
 }

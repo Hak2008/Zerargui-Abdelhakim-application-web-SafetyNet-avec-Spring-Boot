@@ -4,6 +4,7 @@ import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,12 +14,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FireStationCoverageService {
 
     private final PersonService personService;
     private final FireStationService fireStationService;
 
     public Map<String, Object> getPeopleCoveredByStation(String stationNumber) {
+        log.info("GET request received: Get people covered by fire station {}", stationNumber);
+
         List<FireStation> fireStations = fireStationService.getAllFireStations();
 
         List<String> coveredAddresses = fireStations.stream()
@@ -39,11 +43,14 @@ public class FireStationCoverageService {
                 .filter(person -> person.get("age") != null && Integer.parseInt(person.get("age")) <= 18)
                 .count();
 
+        log.debug("Fire station coverage processing completed for station {}", stationNumber);
+
         Map<String, Object> result = new HashMap<>();
         result.put("persons", peopleCoveredByStation);
         result.put("numberOfAdults", numberOfAdults);
         result.put("numberOfChildren", numberOfChildren);
 
+        log.info("Reply sent with successful status");
         return result;
     }
 

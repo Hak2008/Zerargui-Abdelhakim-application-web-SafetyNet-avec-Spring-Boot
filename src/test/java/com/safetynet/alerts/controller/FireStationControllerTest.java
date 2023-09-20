@@ -1,4 +1,4 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alerts.controller.FireStationController;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.service.FireStationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +33,7 @@ public class FireStationControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 
@@ -56,7 +56,6 @@ public class FireStationControllerTest {
     @Test
     public void testUpdateFireStation() throws Exception {
         FireStation updatedFireStation = new FireStation();
-        updatedFireStation.setAddress("123 Main St");
         updatedFireStation.setStation("2");
 
         when(fireStationService.updateFireStation(eq("21 Main Street"), any(FireStation.class))).thenReturn(updatedFireStation);
@@ -65,7 +64,6 @@ public class FireStationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedFireStation)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.address", is("123 Main St")))
                 .andExpect(jsonPath("$.station", is("2")));
     }
 

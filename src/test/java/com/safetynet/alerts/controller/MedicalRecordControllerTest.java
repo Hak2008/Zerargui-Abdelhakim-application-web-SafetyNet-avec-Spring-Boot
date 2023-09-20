@@ -1,7 +1,6 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alerts.controller.MedicalRecordController;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.service.MedicalRecordService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -55,18 +55,22 @@ public class MedicalRecordControllerTest {
 
     @Test
     public void testUpdateMedicalRecord() throws Exception {
-        MedicalRecord updatedMedicalRecord = new MedicalRecord();
-        updatedMedicalRecord.setFirstName("Updated");
-        updatedMedicalRecord.setLastName("MedicalRecord");
 
-        when(medicalRecordService.updateMedicalRecord(eq("Paul"), eq("Henri"), any(MedicalRecord.class))).thenReturn(updatedMedicalRecord);
+        MedicalRecord updatedMedicalRecord = new MedicalRecord();
+        updatedMedicalRecord.setBirthdate("01/01/1990");
+        updatedMedicalRecord.setMedications(Arrays.asList("aspirin", "ibuprofen"));
+        updatedMedicalRecord.setAllergies(Arrays.asList("peanut"));
+
+        when(medicalRecordService.updateMedicalRecord(eq("Paul"), eq("Henri"), any(MedicalRecord.class)))
+                .thenReturn(updatedMedicalRecord);
 
         mockMvc.perform(put("/medicalRecord/Paul/Henri")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedMedicalRecord)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Updated"))
-                .andExpect(jsonPath("$.lastName").value("MedicalRecord"));
+                .andExpect(jsonPath("$.birthdate").value("01/01/1990"))
+                .andExpect(jsonPath("$.medications", hasSize(2)))
+                .andExpect(jsonPath("$.allergies", hasSize(1)));
     }
 
     @Test

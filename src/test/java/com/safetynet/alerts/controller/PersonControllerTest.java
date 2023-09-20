@@ -1,4 +1,4 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alerts.controller.PersonController;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,8 +55,8 @@ public class PersonControllerTest {
     @Test
     public void testUpdatePerson() throws Exception {
         Person updatedPerson = new Person();
-        updatedPerson.setFirstName("Updated");
-        updatedPerson.setLastName("Person");
+        updatedPerson.setAddress("20 Main Street");
+        updatedPerson.setPhone("111-111-1111");
 
         when(personService.updatePerson(eq("Paul"), eq("Henri"), any(Person.class))).thenReturn(updatedPerson);
 
@@ -65,8 +64,8 @@ public class PersonControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPerson)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Updated")))
-                .andExpect(jsonPath("$.lastName", is("Person")));
+                .andExpect(jsonPath("$.address", is("20 Main Street")))
+                .andExpect(jsonPath("$.phone", is("111-111-1111")));
     }
 
     @Test
