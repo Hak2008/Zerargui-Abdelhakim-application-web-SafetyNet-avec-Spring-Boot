@@ -55,7 +55,6 @@ public class PhoneAlertServiceTest {
 
     @Test
     public void testGetPhoneAlertByFireStation() {
-
         String stationNumber1 = "1";
         List<String> phoneNumbers1 = phoneAlertService.getPhoneAlertByFireStation(stationNumber1);
 

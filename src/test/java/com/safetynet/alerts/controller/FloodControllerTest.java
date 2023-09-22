@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alerts.controller.FloodController;
 import com.safetynet.alerts.service.FloodService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +33,7 @@ public class FloodControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

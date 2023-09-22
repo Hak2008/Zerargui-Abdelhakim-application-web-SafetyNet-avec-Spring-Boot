@@ -33,6 +33,7 @@ public class FireControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

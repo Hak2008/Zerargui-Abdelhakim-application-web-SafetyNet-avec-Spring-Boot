@@ -58,8 +58,8 @@ public class MedicalRecordTest {
 
     @Test
     public void testEquals() {
-        assertEquals(medicalRecord1, medicalRecord1);
 
+        assertEquals(medicalRecord1, medicalRecord1);
         assertNotEquals(medicalRecord1, medicalRecord2);
         assertNotEquals(medicalRecord1, medicalRecord3);
         assertNotEquals(medicalRecord2, medicalRecord3);
@@ -67,8 +67,8 @@ public class MedicalRecordTest {
 
     @Test
     public void testHashCode() {
-        assertEquals(medicalRecord1.hashCode(), medicalRecord1.hashCode());
 
+        assertEquals(medicalRecord1.hashCode(), medicalRecord1.hashCode());
         assertNotEquals(medicalRecord1.hashCode(), medicalRecord2.hashCode());
         assertNotEquals(medicalRecord1.hashCode(), medicalRecord3.hashCode());
         assertNotEquals(medicalRecord2.hashCode(), medicalRecord3.hashCode());
@@ -76,6 +76,7 @@ public class MedicalRecordTest {
 
     @Test
     public void testToString() {
+
         assertNotNull(medicalRecord1.toString());
         assertTrue(medicalRecord1.toString().contains("John"));
         assertTrue(medicalRecord1.toString().contains("Boyd"));
@@ -87,6 +88,7 @@ public class MedicalRecordTest {
 
     @Test
     public void testGetAge() {
+
         assertEquals(39, medicalRecord1.getAge());
         assertEquals(34, medicalRecord2.getAge());
         assertEquals(39, medicalRecord3.getAge());

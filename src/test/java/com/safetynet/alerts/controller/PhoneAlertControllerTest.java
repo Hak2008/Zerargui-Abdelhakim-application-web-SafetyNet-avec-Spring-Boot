@@ -31,6 +31,7 @@ public class PhoneAlertControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

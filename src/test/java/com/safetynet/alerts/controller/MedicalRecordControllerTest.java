@@ -34,6 +34,7 @@ public class MedicalRecordControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 
@@ -55,7 +56,6 @@ public class MedicalRecordControllerTest {
 
     @Test
     public void testUpdateMedicalRecord() throws Exception {
-
         MedicalRecord updatedMedicalRecord = new MedicalRecord();
         updatedMedicalRecord.setBirthdate("01/01/1990");
         updatedMedicalRecord.setMedications(Arrays.asList("aspirin", "ibuprofen"));

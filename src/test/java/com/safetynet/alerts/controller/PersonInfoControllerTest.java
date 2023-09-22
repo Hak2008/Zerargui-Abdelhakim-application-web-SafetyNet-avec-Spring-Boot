@@ -33,6 +33,7 @@ public class PersonInfoControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

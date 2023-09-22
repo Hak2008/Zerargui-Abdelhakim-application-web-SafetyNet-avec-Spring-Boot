@@ -44,18 +44,20 @@ public class PersonTest {
 
     @Test
     public void testEquals() {
-        assertEquals(person1, person2);
 
+        assertEquals(person1, person2);
         assertNotEquals(person1, person3);
     }
 
     @Test
     public void testHashCode() {
-        assertEquals(person1.hashCode(), person2.hashCode()); 
+
+        assertEquals(person1.hashCode(), person2.hashCode());
     }
 
     @Test
     public void testToString() {
+
         String expectedToString = "Person(firstName=John, lastName=Boyd, address=1509 Culver St, city=Culver, zip=97451, phone=841-874-6512, email=jaboyd@email.com, medicalRecord=null)";
         assertEquals(expectedToString, person1.toString());
     }

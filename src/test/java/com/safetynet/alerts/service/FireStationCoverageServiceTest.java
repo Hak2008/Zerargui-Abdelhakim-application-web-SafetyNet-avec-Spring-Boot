@@ -56,7 +56,6 @@ public class FireStationCoverageServiceTest {
 
     @Test
     public void testGetPeopleCoveredByStation() {
-
         String stationNumber1 = "1";
         Map<String, Object> result1 = fireStationCoverageService.getPeopleCoveredByStation(stationNumber1);
 

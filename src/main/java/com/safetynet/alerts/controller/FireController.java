@@ -1,6 +1,5 @@
 package com.safetynet.alerts.controller;
 
-
 import com.safetynet.alerts.service.FireService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/fire")
 public class FireController {
-
 
     private final FireService fireService;
 

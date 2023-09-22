@@ -32,6 +32,7 @@ public class FireStationCoverageControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

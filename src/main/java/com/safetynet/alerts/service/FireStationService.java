@@ -46,6 +46,7 @@ public class FireStationService {
     }
 
     public List<FireStation> getAllFireStations() {
+
         return fireStations;
     }
 }

@@ -14,6 +14,7 @@ public class MedicalRecordServiceTest {
 
     @BeforeEach
     public void setUp() {
+
         medicalRecordService = new MedicalRecordService();
     }
 

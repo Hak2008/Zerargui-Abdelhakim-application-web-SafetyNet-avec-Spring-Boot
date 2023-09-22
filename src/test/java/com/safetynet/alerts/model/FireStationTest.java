@@ -29,8 +29,8 @@ public class FireStationTest {
 
     @Test
     public void testEquals() {
-        assertEquals(fireStation1, fireStation2);
 
+        assertEquals(fireStation1, fireStation2);
         assertNotEquals(fireStation1, fireStation3);
     }
 
@@ -42,6 +42,7 @@ public class FireStationTest {
 
     @Test
     public void testToString() {
+
         String expectedToString = "FireStation(address=1509 Culver St, station=3)";
         assertEquals(expectedToString, fireStation1.toString());
     }

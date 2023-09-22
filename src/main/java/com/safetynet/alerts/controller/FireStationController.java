@@ -19,8 +19,8 @@ public class FireStationController {
 
     @Autowired
     public FireStationController(FireStationService fireStationService) {
-        this.fireStationService = fireStationService;
 
+        this.fireStationService = fireStationService;
     }
 
     @PostMapping

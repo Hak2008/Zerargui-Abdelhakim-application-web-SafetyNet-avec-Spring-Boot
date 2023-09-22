@@ -19,6 +19,7 @@ public class MedicalRecordController {
 
     @Autowired
     public MedicalRecordController(MedicalRecordService medicalRecordService) {
+
         this.medicalRecordService = medicalRecordService;
     }
 

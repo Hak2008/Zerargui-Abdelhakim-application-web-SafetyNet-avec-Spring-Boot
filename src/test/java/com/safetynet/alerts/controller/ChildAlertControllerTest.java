@@ -32,6 +32,7 @@ public class ChildAlertControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

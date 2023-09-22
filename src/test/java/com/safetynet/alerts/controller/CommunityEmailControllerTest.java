@@ -31,6 +31,7 @@ public class CommunityEmailControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         objectMapper = new ObjectMapper();
     }
 

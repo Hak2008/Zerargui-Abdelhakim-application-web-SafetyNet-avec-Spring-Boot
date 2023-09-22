@@ -23,6 +23,7 @@ public class PersonInfoController {
 
     @Autowired
     public PersonInfoController(PersonInfoService personInfoService) {
+
         this.personInfoService = personInfoService;
     }
 
@@ -38,7 +39,6 @@ public class PersonInfoController {
             log.info("No person info found for first name {} and last name {}", firstName, lastName);
             return ResponseEntity.ok(Collections.emptyList());
         }
-
         log.info("Reply sent with status: {}", HttpStatus.OK);
         return ResponseEntity.ok(personInfo);
     }
